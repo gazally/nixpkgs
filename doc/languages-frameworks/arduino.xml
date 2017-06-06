@@ -1,0 +1,209 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xml:id="sec-arduino">
+
+  <title>Arduino</title>
+  <para>
+    The Arduino IDE can build software for and flash it to hundreds of
+    different microcontroller boards, and over one thousand code
+    libraries are available for inclusion in Arduino projects. Using
+    Nixpkgs, you can declare the boards and libraries you need for
+    your project, and easily create different Arduino configurations
+    for different projects.
+  </para>
+  <section xml:id="arduino-variations">
+    <title>Arduino Variations</title>
+    <para>
+      Nixpkgs defines three variations of the Arduino IDE. The
+      following are attributes belonging to the
+      <varname>pkgs</varname> set:
+      <variablelist>
+        <varlistentry>
+          <term><varname>arduino</varname></term>
+          <listitem>
+            <para>
+	      The latest stable version of the Arduino IDE.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><varname>arduino-core</varname></term>
+          <listitem>
+            <para>
+              The Arduino IDE tools and libraries, without the
+              graphical environment. If you use GNU make or another
+              software construction tool to build your projects, this
+              package is probably what you're looking for. Both
+              <varname>arduino</varname> and
+              <varname>arduino-core</varname> contain a program called
+              <varname>arduino-builder</varname>, which can compile
+              projects from the command line.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><varname>teensyduino</varname></term>
+          <listitem>
+            <para>
+              The graphical version of the Arduino IDE with
+              proprietary patches for the Teensy Development boards.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </section>
+
+  <section xml:id="adding-arduino-packages">
+    <title>Adding Packages to Arduino</title>
+    <para>
+      While running the Arduino IDE from Nixpkgs, you can use its
+      Boards Manager and Libraries Manager as usual, and it will
+      install boards and libraries in your user home directory.  You
+      can also declare the set of Arduino boards and libraries using
+      derivations from Nixpkgs. The rest of this section discusses
+      declarative installation of Arduino boards and libraries using
+      Nix and Nixpkgs.
+    </para>
+    <para>
+      The first step to declare the list of packages you want in
+      your Arduino installation is to create a dedicated
+      derivation. This can be done in a dedicated <filename>arduino.nix</filename>
+      file such as:
+
+      <example xml:id="ex-arduinoNix">
+        <title>Nix expression to build Arduino with packages (<filename>arduino.nix</filename>)</title>
+        <programlisting language="nix">
+/*
+This is a nix expression to build Arduino with some Arduino packages
+which might be useful for a low-power radio project, on any
+distribution where Nix is installed. This will install all the
+dependencies from the nixpkgs repository and build the binary files
+without interfering with the host distribution.
+
+To build the project, type the following from the current directory:
+
+$ nix-build arduino.nix
+
+To run the newly compiled executable:
+
+$ ./result/bin/arduino
+*/
+{ pkgs ? import &lt;nixpkgs&gt; {} }: <co xml:id="ex-arduinoNix-1" />
+arduinoWithPackages (apkgs : with apkgs; [ moteino lowpower rfm69 spiflash ]) <co xml:id="ex-arduinoNix-2" />
+	</programlisting>
+      </example>
+      <calloutlist>
+        <callout arearefs="ex-arduinoNix-1">
+          <para>
+            The first non-comment line in this file
+            (<literal>{ pkgs ? ... }</literal>)
+            indicates that the whole file represents a function.
+          </para>
+        </callout>
+
+        <callout arearefs="ex-arduinoNix-2">
+          <para>
+            The rest of the file specifies the list of packages to
+            install. In the example, one package containing board
+            definitions, (<varname>moteino</varname> and three
+            libraries, <varname>lowpower</varname>,
+            <varname>rfm69</varname> and
+            <varname>spiflash</varname>) are included.
+          </para>
+        </callout>
+      </calloutlist>
+    </para>
+    <para>
+      The result of this configuration will be an
+      <command>arduino</command> command which launches the Arduino IDE with your
+      chosen boards in the Boards Manager and chosen libraries in the Library Manager.
+    </para>
+
+    <para>
+      You can check that it works by executing this in a terminal:
+
+      <screen>
+	$ nix-build arduino.nix
+	$ ./result/bin/arduino
+      </screen>
+
+      Check that your libraries and boards are present in this
+      Arduino instance. For example, try...
+    </para>
+
+    <para>
+      In addition to the Arduino IDE, packages can also be added to the non-GUI
+      core of Arduino using <varname>arduinoCoreWithPackages</varname> and to
+      the Teensyduino variation using <varname>teensyduinoWithPackages</varname>.
+    </para>
+    <para>
+      The list of available boards and libraries can be seen with the following command:
+      <example>
+        <title>Querying Arudino packages</title>
+        <programlisting><![CDATA[
+	nix-env -f "<nixpkgs>" -qaP -A arduinoPackages
+	]]></programlisting>
+      </example>
+    </para>
+
+    <para>
+      If you are on NixOS, you can install this particular Arduino for
+      all users by adding it to the list of system packages
+      (see <link xlink:href="http://nixos.org/nixos/#sec-declarative-package-mgmt"></link>). Simply
+      modify your file <filename>configuration.nix</filename> to
+      make it contain:
+      <example>
+        <title>Custom Arduino in <filename>configuration.nix</filename></title>
+        <programlisting><![CDATA[
+{
+environment.systemPackages = [
+# [...]
+(import /path/to/arduino.nix { inherit pkgs; })
+];
+}
+]]></programlisting>
+      </example>
+    </para>
+
+    <para>
+      In this case, the next <command>nixos-rebuild switch</command>
+      will take care of adding your <command>arduino</command> to the
+      <varname>PATH</varname> environment variable
+      (see <link xlink:href="http://nixos.org/nixos/#sec-changing-config">Nixos manual</link>).
+    </para>
+
+    <para>
+      If you are not on NixOS or want to install this particular
+      Arduino only for yourself, you can do so by adding it to your
+      <filename>~/.config/nixpkgs/config.nix</filename>
+      (see <xref linkend="sec-modify-via-packageOverrides"/>):
+      <example>
+        <title>Custom Arduino in <filename>~/.config/nixpkgs/config.nix</filename></title>
+        <programlisting><![CDATA[
+{
+  packageOverrides = super: let self = super.pkgs; in {
+    myArduino = import /path/to/arduino.nix { pkgs = self; };
+  };
+}
+]]></programlisting>
+      </example>
+    </para>
+
+    <para>
+      In this case, the next
+      <literal>nix-env -f '&lt;nixpkgs&gt;' -iA myArduino</literal>
+      will take care of adding your customized Arduino to the
+      <varname>PATH</varname> environment variable.
+    </para>
+  </section>
+  <section xml:id="packaging-arduino-libraries">
+    <title>How to package Arduino libraries</title>
+    <para>TODO.</para>
+  </section>
+  <section xml:id="packaging-arduino-boards">
+    <title>Packaging Arduino board definitions</title>
+    <para>TODO.</para>
+  </section>
+
+</section>
