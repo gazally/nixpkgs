@@ -485,6 +485,16 @@ with pkgs;
     withGui = false;
   };
 
+  arduinoPackages = recurseIntoAttrs (callPackage ./arduino-packages.nix { });
+
+  arduinoWrapWithPackages = import ../build-support/arduino/wrapper.nix {
+    inherit (pkgs) lib stdenv;
+    inherit (pkgs.xorg) lndir;
+  };
+
+  arduinoWithPackages = arduinoWrapWithPackages arduino arduinoPackages;
+  arduinoCoreWithPackages = arduinoWrapWithPackages arduino-core arduinoPackages;
+
   apitrace = libsForQt56.callPackage ../applications/graphics/apitrace {};
 
   argus = callPackage ../tools/networking/argus {};
@@ -7859,6 +7869,7 @@ with pkgs;
   tcptrack = callPackage ../development/tools/misc/tcptrack { };
 
   teensyduino = arduino-core.override { withGui = true; withTeensyduino = true; };
+  teensyduinoWithPackages = arduinoWrapWithPackages teensyduino arduinoPackages;
 
   teensy-loader-cli = callPackage ../development/tools/misc/teensy-loader-cli { };
 

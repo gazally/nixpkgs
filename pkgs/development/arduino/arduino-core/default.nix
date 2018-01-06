@@ -209,6 +209,34 @@ stdenv.mkDerivation rec {
     ''}
   '';
 
+  # Enable adding board and library definitions to Arduino.
+  passthru = {
+    # This board derivation is suitable for board definitions
+    # which reuse the AVR toolchain.
+    boardDerivation = args: stdenv.mkDerivation ({
+      preferLocalBuild = true;
+      configureScript = "true";
+      dontBuild = true;
+      installPhase = ''
+        mkdir -p "$out/share/arduino/hardware/$destDir"
+	cp -pr * "$out/share/arduino/hardware/$destDir"
+      '';
+      # Leave any firmware files alone.
+      dontStrip = true;
+      dontPatchELF = true;
+    } // args);
+    libraryDerivation = args: stdenv.mkDerivation ({
+      preferLocalBuild = true;
+      configureScript = "true";
+      dontBuild = true;
+      installPhase= ''
+        mkdir -p "$out/share/arduino/libraries/$libraryName"
+        cp -pr * "$out/share/arduino/libraries/$libraryName"
+      '';
+      buildInputs = [ unzip ];
+    } // args);
+  };
+
   meta = with stdenv.lib; {
     description = "Open-source electronics prototyping platform";
     homepage = http://arduino.cc/;
