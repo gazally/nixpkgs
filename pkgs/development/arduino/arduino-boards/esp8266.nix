@@ -1,81 +1,80 @@
- { stdenv, lib, system, fetchFromGitHub, fetchurl, expat, ncurses5, gcc, glibc, zlib }:
+{ stdenv, lib, system, fetchFromGitHub, fetchurl, expat, ncurses5, gcc, glibc, zlib }:
 
 let
   downloads = {
-    "hardware/esp8266com/esp8266" =
-      let commit = "09826c6d87e54c15422da90f060377c9ef188947"; in {
-      dirname = "Arduino-${commit}-src";
+    "hardware/esp8266com/esp8266" = rec {
+      dirname = src.name;
       src = fetchFromGitHub {
         owner = "esp8266";
         repo = "Arduino";
-        rev = commit;
-        sha256 = "08a051jsx1nhaipp6rp875a24hk8ir7ad2j2b2yyq4mkvh4l87ac";
+	rev = "2.4.0";
+        sha256 = "1aldsw2sqq6y92hi4jjdhvhm10qajy2jvvnqfci0sq1ifryqg4sk";
       };
     };
 
     "hardware/esp8266com/esp8266/tools/esptool" = lib.optionalAttrs (system == "x86_64-darwin") {
-      dirname = "esptool-0.4.9-osx";
+      dirname = "esptool-0.4.12-osx";
       src = fetchurl {
-        url = "https://github.com/igrr/esptool-ck/releases/download/0.4.9/esptool-0.4.9-osx.tar.gz";
-        checksum = "57938b473765723a7e6602d55973017b7719bda69bdcff4250b24fcbf7a399f5";
+        url = "https://github.com/igrr/esptool-ck/releases/download/0.4.12/esptool-0.4.12-osx.tar.gz";
+	sha256 = "8232a70611768dca49321f488e3ada29648e28aa83a6d826fcbb871aed4a9c08";
       };
     }
     // lib.optionalAttrs (system == "x86_64-linux") {
-      dirname = "esptool-0.4.9-linux64";
+      dirname = "esptool-0.4.12-linux64";
       src = fetchurl {
-        url =  "https://github.com/igrr/esptool-ck/releases/download/0.4.9/esptool-0.4.9-linux64.tar.gz";
-        sha256 = "fab9d1be8a648bea6728ad5c9d18ce972508187700cf90baf1897ac9cdf4db15";
+        url =  "https://github.com/igrr/esptool-ck/releases/download/0.4.12/esptool-0.4.12-linux64.tar.gz";
+        sha256 = "f7ca7666557139bda7b2130022623a004a30d20ea47e1612b9b365783f00d8cb";
       };
     }
     // lib.optionalAttrs (system == "i686-linux") {
-      dirname = "esptool-0.4.9-linux32";
+      dirname = "esptool-0.4.12-linux32";
       src = fetchurl {
-        url = "https://github.com/igrr/esptool-ck/releases/download/0.4.9/esptool-0.4.9-linux32.tar.gz";
-        sha256 = "bc4444d73d59be74608be5e1431353a0a9ae9e308e99c76a271d68a6ae145b7b";
+        url = "https://github.com/igrr/esptool-ck/releases/download/0.4.12/esptool-0.4.12-linux32.tar.gz";
+        sha256 = "2d9970c8574908c35656e35f433082aeb7d79c1967067d7d2cff83f5ed2acbaa";
       };
     };
 
-   "hardware/esp8266com/esp8266/tools/xtensa-lx106-elf" = lib.optionalAttrs (system == "x86_64-darwin") {
-     dirname = "xtensa-lx106-elf";
-       src = fetchurl {
-         url =  "https://github.com/esp8266/Arduino/releases/download/2.3.0/osx-xtensa-lx106-elf-gb404fb9-2.tar.gz";
-         sha256 = "0cf150193997bd1355e0f49d3d49711730035257bc1aee1eaaad619e56b9e4e6";
-       };
-     }
-     // lib.optionalAttrs (system == "x86_64-linux") {
-       dirname = "xtensa-lx106-elf";
-       src = fetchurl {
-         url =  "https://github.com/esp8266/Arduino/releases/download/2.3.0/linux64-xtensa-lx106-elf-gb404fb9.tgz";
-         sha256 = "46f057fbd8b320889a26167daf325038912096d09940b2a95489db92431473b7";
-       };
-     }
-     // lib.optionalAttrs (system == "i686-linux") {
-       dirname = "xtensa-lx106-elf";
-       src = fetchurl {
-         url = "https://github.com/esp8266/Arduino/releases/download/2.3.0/linux32-xtensa-lx106-elf.tar.gz";
-         sha256 = "b24817819f0078fb05895a640e806e0aca9aa96b47b80d2390ac8e2d9ddc955a";
-       };
+    "hardware/esp8266com/esp8266/tools/xtensa-lx106-elf" = lib.optionalAttrs (system == "x86_64-darwin") {
+      dirname = "xtensa-lx106-elf";
+      src = fetchurl {
+        url =  "https://github.com/esp8266/Arduino/releases/download/2.3.0/osx-xtensa-lx106-elf-gb404fb9-2.tar.gz";
+        sha256 = "0cf150193997bd1355e0f49d3d49711730035257bc1aee1eaaad619e56b9e4e6";
+      };
+    }
+    // lib.optionalAttrs (system == "x86_64-linux") {
+      dirname = "xtensa-lx106-elf";
+      src = fetchurl {
+        url =  "https://github.com/esp8266/Arduino/releases/download/2.3.0/linux64-xtensa-lx106-elf-gb404fb9.tgz";
+        sha256 = "46f057fbd8b320889a26167daf325038912096d09940b2a95489db92431473b7";
+      };
+    }
+    // lib.optionalAttrs (system == "i686-linux") {
+      dirname = "xtensa-lx106-elf";
+      src = fetchurl {
+        url = "https://github.com/esp8266/Arduino/releases/download/2.3.0/linux32-xtensa-lx106-elf.tar.gz";
+        sha256 = "b24817819f0078fb05895a640e806e0aca9aa96b47b80d2390ac8e2d9ddc955a";
+      };
     };
 
     "hardware/esp8266com/esp8266/tools/mkspiffs" = lib.optionalAttrs (system == "x86_64-darwin") {
-      dirname = "mkspiffs-0.1.2-osx";
+      dirname = "mkspiffs-0.2.0-no_magic_length-osx";
       src = fetchurl {
-        url =  "https://github.com/igrr/mkspiffs/releases/download/0.1.2/mkspiffs-0.1.2-osx.tar.gz";
-        sha256 = "df656fae21a41c1269ea50cb53752dcaf6a4e1437255f3a9fb50b4025549b58e";
+        url =  "https://github.com/igrr/mkspiffs/releases/download/0.2.0/mkspiffs-0.2.0-no_magic_length-osx.tar.gz";
+        sha256 = "e784d0b60c8b0ddc28e6467f5bffb7ae50db0a52c46b9ca18e71de0bf7f40a4d";
       };
     }
     // lib.optionalAttrs (system == "x86_64-linux") {
-      dirname = "mkspiffs-0.1.2-linux64";
+      dirname = "mkspiffs-0.2.0-no_magic_length-linux64";
       src = fetchurl {
-        url =  "https://github.com/igrr/mkspiffs/releases/download/0.1.2/mkspiffs-0.1.2-linux64.tar.gz";
-        sha256 = "1a1dd81b51daf74c382db71b42251757ca4136e8762107e69feaa8617bac315f";
+        url =  "https://github.com/igrr/mkspiffs/releases/download/0.2.0/mkspiffs-0.2.0-no_magic_length-linux64.tar.gz";
+        sha256 = "b63a99b844c3debeffe605ff2632d8b8a5c365431ee5a091fa0e6e3e1be1bc6c";
       };
     }
     // lib.optionalAttrs (system == "i686-linux") {
-      dirname = "mkspiffs-0.1.2-linux32";
+      dirname = "mkspiffs-0.2.0-no_magic_length-linux32";
       src = fetchurl {
-        url = "https://github.com/igrr/mkspiffs/releases/download/0.1.2/mkspiffs-0.1.2-linux32.tar.gz";
-        sha256 = "e990d545dfcae308aabaac5fa9e1db734cc2b08167969e7eedac88bd0839667c";
+        url = "https://github.com/igrr/mkspiffs/releases/download/0.2.0/mkspiffs-0.1.2-no_magic_length-linux32.tar.gz";
+        sha256 = "dfed9bc40a88a2c89b78acc83181aff401abf1620b8041b136aa2ad6cd08779d";
       };
     };
   };
@@ -86,7 +85,7 @@ let
 in
 stdenv.mkDerivation rec {
   name = "esp8266-${version}";
-  version = "2.3.0";
+  version = "2.4.0";
 
   srcs = (map (x: x.src) (builtins.attrValues downloads));
   setSourceRoot = "export sourceRoot=`pwd`";
