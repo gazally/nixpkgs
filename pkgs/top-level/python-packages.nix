@@ -935,6 +935,8 @@ in {
 
   rlp = callPackage ../development/python-modules/rlp { };
 
+  rpi-gpio = callPackage ../development/python-modules/rpi-gpio { };
+
   rx = callPackage ../development/python-modules/rx { };
 
   sabyenc = callPackage ../development/python-modules/sabyenc { };
