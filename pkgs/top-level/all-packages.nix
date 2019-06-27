@@ -7170,6 +7170,8 @@ in
 
   yeshup = callPackage ../tools/system/yeshup { };
 
+  yggdrasil = callPackage ../tools/networking/yggdrasil { };
+
   # To expose more packages for Yi, override the extraPackages arg.
   yi = callPackage ../applications/editors/yi/wrapper.nix { };
 
