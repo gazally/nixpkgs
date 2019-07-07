@@ -109,6 +109,11 @@ in {
       bindsTo = [ "network-online.target" ];
       after = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
+      confinement = {
+        enable = true;
+        packages = [ pkgs.coreutils ];
+        mode = "chroot-only";
+      };
 
       preStart = (if (cfg.configFile == null) then ''
                     ${cfg.package}/bin/yggdrasil -genconf > /run/yggdrasil/yggdrasil.conf
@@ -123,8 +128,10 @@ in {
 
         RuntimeDirectory = "yggdrasil";
         RuntimeDirectoryMode = "0700";
-        BindReadOnlyPaths = mkIf (cfg.configFile != null)
-          [ "${cfg.configFile}:/run/yggdrasil/configFile.hjson" ];
+        BindReadOnlyPaths = [ "/etc/yggdrasil.conf" ] ++
+          (if cfg.configFile != null then
+             [ "${cfg.configFile}:/run/yggdrasil/configFile.hjson" ]
+             else [ ]);
 
         DynamicUser = true;
         AmbientCapabilities = "CAP_NET_ADMIN";
@@ -132,10 +139,10 @@ in {
         MemoryDenyWriteExecute = true;
         PrivateTmp = true;
         ProtectControlGroups = true;
-        ProtectHome = "tmpfs";
+        # ProtectHome = "tmpfs";
         ProtectKernelModules = true;
         ProtectKernelTunables = true;
-        ProtectSystem = "strict";
+        # ProtectSystem = "strict";
         RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_NETLINK";
         RestrictNamespaces = true;
         RestrictRealtime = true;
