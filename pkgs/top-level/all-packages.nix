@@ -572,6 +572,8 @@ in
 
   arangodb = callPackage ../servers/nosql/arangodb { };
 
+  arcan = callPackage ../servers/arcan { };
+
   arcanist = callPackage ../development/tools/misc/arcanist {};
 
   arduino = arduino-core.override { withGui = true; };
