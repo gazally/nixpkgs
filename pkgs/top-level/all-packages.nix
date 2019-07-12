@@ -24072,6 +24072,8 @@ in
 
   x2x = callPackage ../tools/X11/x2x { };
 
+  xarcan = callPackage ../servers/xarcan { };
+
   xboxdrv = callPackage ../misc/drivers/xboxdrv { };
 
   xbps = callPackage ../tools/package-management/xbps { };

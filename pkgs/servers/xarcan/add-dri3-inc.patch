@@ -1,0 +1,21 @@
+diff --git a/configure.ac b/configure.ac
+index d27c8495f..84a5d2e72 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1326,6 +1326,7 @@ case x"$DRI3" in
+ 	xyes|xauto)
+ 		DRI3=yes
+ 		AC_DEFINE(DRI3, 1, [Build DRI3 extension])
++		DRI3_INC='$(top_srcdir)/dri3'
+ 		DRI3_LIB='$(top_builddir)/dri3/libdri3.la'
+ 		SDK_REQUIRED_MODULES="$SDK_REQUIRED_MODULES $DRI3PROTO"
+ 		AC_MSG_NOTICE([DRI3 enabled]);
+@@ -2384,7 +2385,7 @@ if test "$KDRIVE" = yes; then
+ 
+     # damage shadow extension glx (NOTYET) fb mi
+     KDRIVE_INC='-I$(top_srcdir)/hw/kdrive/src'
+-    KDRIVE_PURE_INCS="$KDRIVE_INC $MIEXT_SYNC_INC $MIEXT_DAMAGE_INC $MIEXT_SHADOW_INC $XEXT_INC $FB_INC $MI_INC"
++    KDRIVE_PURE_INCS="$KDRIVE_INC $DRI3_INC $MIEXT_SYNC_INC $MIEXT_DAMAGE_INC $MIEXT_SHADOW_INC $XEXT_INC $FB_INC $MI_INC"
+     KDRIVE_OS_INC='-I$(top_srcdir)/hw/kdrive/linux'
+     KDRIVE_INCS="$KDRIVE_PURE_INCS $KDRIVE_OS_INC"
+ 
