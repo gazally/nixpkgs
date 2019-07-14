@@ -572,7 +572,12 @@ in
 
   arangodb = callPackage ../servers/nosql/arangodb { };
 
+  arcan-unstable = callPackage ../servers/arcan/unstable.nix { };
+
   arcan = callPackage ../servers/arcan { };
+
+  arcanTools-unstable = recurseIntoAttrs (callPackages ../servers/arcan/tools.nix {
+    arcan = arcan-unstable; });
 
   arcanist = callPackage ../development/tools/misc/arcanist {};
 
@@ -24073,6 +24078,10 @@ in
   x2x = callPackage ../tools/X11/x2x { };
 
   xarcan = callPackage ../servers/xarcan { };
+
+  xarcan-unstable = callPackage ../servers/xarcan {
+    arcan = arcan-unstable;
+  };
 
   xboxdrv = callPackage ../misc/drivers/xboxdrv { };
 
