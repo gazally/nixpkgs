@@ -11,7 +11,7 @@ buildGoModule rec {
     sha256 = "1jkbfx6mnzqqcqmdmll7bb44d94xa5iam704dpm2jmyk5pcvdhld";
   };
 
-  modSha256 = "1g9wzb5i54gk9459wxspdwfrmr2vf2zn35k75zwci2dr3s7psb0f";
+  modSha256 = "0pjhr8ys05az4xryv9pxgzlsrqvghxn281a49g26xhsxp5pg1z32";
 
   # Change the default location of the management socket on Linux
   # systems so that the yggdrasil system service unit does not have to
