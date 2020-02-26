@@ -4,12 +4,12 @@
 
 stdenv.mkDerivation rec {
   name = "arcan-${version}";
-  version = "0.5.5.2";
+  version = "0.6.0-pre2";
   src = fetchFromGitHub {
     owner = "letoram";
     repo = "arcan";
-    rev = "9d62dcb4305ebf3610100c25537178c0a4affe2c";
-    sha256 = "1xpa72vqgkspkxkflv6hqjcl6zqf9qr93g0hw33nljx0gmygxiyd";
+    rev = version;
+    sha256 = "04g6z367kkn9fr6vb43m959a0ydrxbfxgivsxq3yv9ri4j81a8nh";
   };
 
   nativeBuildInputs = [ cmake pkgconfig ];

@@ -24079,8 +24079,8 @@ in
 
   xarcan = callPackage ../servers/xarcan { };
 
-  xarcan-unstable = callPackage ../servers/xarcan {
-    arcan = arcan-unstable;
+  xarcan-unstable = callPackage ../servers/xarcan/unstable.nix {
+    # arcan = arcan-unstable;
   };
 
   xboxdrv = callPackage ../misc/drivers/xboxdrv { };
